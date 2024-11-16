@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL & ~E_NOTICE); // This will suppress only notices, not warnings or errors
 // booking.php
 session_start();
 require 'db_config.php';
@@ -24,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['showtime_id'], $_POST[
 
     // Prepare placeholders for seat checking
     $seatPlaceholdersArray = array_fill(0, count($seats), '?');
-    $seatPlaceholders = implode(',', $seatPlaceholdersArray);
+    $seatPlaceholders = implode(',', $seatPlaceholdersArray);  // Store the result of implode in a variable
 
     // Check if any of the selected seats are already booked by the same user for this showtime
     $duplicateSeats = [];
@@ -45,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['showtime_id'], $_POST[
         $stmt = $conn->prepare("INSERT INTO Bookings (user_id, showtime_id, seats, booking_time, payment_status) VALUES (:user_id, :showtime_id, :seats, NOW(), 'paid')");
         $stmt->bindParam(':user_id', $user_id);
         $stmt->bindParam(':showtime_id', $showtime_id);
-        $stmt->bindParam(':seats', json_encode($seats));
+        $stmt->bindParam(':seats', json_encode($seats));  // Bind the JSON-encoded seats properly
         
         if ($stmt->execute()) {
             $success = "Booking successful!";
@@ -67,9 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['showtime_id'], $_POST[
 <body>
     <div class="booking-container">
         <h2>Book Your Seats</h2>
-        <?php if ($error): ?>
-            <p class="error"><?php echo $error; ?></p>
-        <?php endif; ?>
         <?php if ($success): ?>
             <p class="success"><?php echo $success; ?></p>
         <?php endif; ?>
@@ -95,6 +93,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['showtime_id'], $_POST[
 
             <button type="submit">Confirm Booking</button>
         </form>
+
+        <?php if ($error): ?>
+            <p class="error"><?php echo $error; ?></p>
+        <?php endif; ?>
     </div>
 </body>
 </html>

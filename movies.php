@@ -8,14 +8,23 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+// Handle logout
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: index.php");
+    exit();
+}
 
 // Fetch movies
 $moviesStmt = $conn->query("SELECT * FROM Movies");
 $movies = $moviesStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch user bookings
-$bookingsStmt = $conn->prepare("SELECT b.showtime_id, b.seats, s.movie_id, s.show_date, s.show_time FROM Bookings b JOIN Showtimes s ON b.showtime_id = s.id WHERE b.user_id = :user_id");
+$user_id = $_SESSION['user_id'];
+$bookingsStmt = $conn->prepare("SELECT b.showtime_id, b.seats, s.movie_id, s.show_date, s.show_time 
+                                FROM Bookings b 
+                                JOIN Showtimes s ON b.showtime_id = s.id 
+                                WHERE b.user_id = :user_id");
 $bookingsStmt->bindParam(':user_id', $user_id);
 $bookingsStmt->execute();
 $userBookings = $bookingsStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -35,8 +44,8 @@ foreach ($userBookings as $booking) {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <h1 id="titre">الأفلام المتوفرة</h1>
     <div class="movies-container">
-        <h2>Available Movies</h2>
         <ul class="movie-list">
             <?php foreach ($movies as $movie): ?>
                 <li class="movie-item">
@@ -58,5 +67,41 @@ foreach ($userBookings as $booking) {
             <?php endforeach; ?>
         </ul>
     </div>
+    <br>
+    <div class="logout-container">
+        <a href="movies.php?logout=true" class="logout-button">Logout</a>
+    </div>
+    
+    <div class="theme-toggle-container">
+        <button id="theme-toggle" class="theme-toggle-button">Switch to Dark Mode</button>
+    </div>
+
+    <script>
+    // Get the theme toggle button and body element
+    const themeToggleButton = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Check saved theme preference in localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggleButton.textContent = 'Switch to Light Mode';
+    }
+
+    // Toggle theme on button click
+    themeToggleButton.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        // Update button text
+        if (body.classList.contains('dark-mode')) {
+            themeToggleButton.textContent = 'Switch to Light Mode';
+            localStorage.setItem('theme', 'dark'); // Save preference
+        } else {
+            themeToggleButton.textContent = 'Switch to Dark Mode';
+            localStorage.setItem('theme', 'light'); // Save preference
+        }
+    });
+</script>
+
 </body>
 </html>
