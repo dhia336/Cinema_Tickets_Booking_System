@@ -34,7 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="login-container">
-        <h2>Welcom to ( سينما الرحمة )</h2>
+        <h1>Welcome To Cinema Al Rahma </h1>
+        <h2>Login Here to access movies </h2>
         <?php if ($error): ?>
             <p class="error"><?php echo $error; ?></p>
         <?php endif; ?>
@@ -42,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
-            <p>Don't have an account? <a href="register.php">Register here</a>.</p>
+            <p>Don't have an acount ? <a href="register.php">Make one</a></p>
 
         </form>
     </div>

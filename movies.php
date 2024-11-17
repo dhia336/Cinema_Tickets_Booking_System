@@ -8,6 +8,16 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Fetch user info and check if admin
+$user_id = $_SESSION['user_id'];
+$userStmt = $conn->prepare("SELECT role FROM Users WHERE id = :user_id");
+$userStmt->bindParam(':user_id', $user_id);
+$userStmt->execute();
+$user = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if user is admin
+$isAdmin = $user['role'] === 'admin';
+
 // Handle logout
 if (isset($_GET['logout'])) {
     session_destroy();
@@ -20,7 +30,6 @@ $moviesStmt = $conn->query("SELECT * FROM Movies");
 $movies = $moviesStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch user bookings
-$user_id = $_SESSION['user_id'];
 $bookingsStmt = $conn->prepare("SELECT b.showtime_id, b.seats, s.movie_id, s.show_date, s.show_time 
                                 FROM Bookings b 
                                 JOIN Showtimes s ON b.showtime_id = s.id 
@@ -44,7 +53,7 @@ foreach ($userBookings as $booking) {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1 id="titre">الأفلام المتوفرة</h1>
+    <h1 id="titre">Available Movies</h1>
     <div class="movies-container">
         <ul class="movie-list">
             <?php foreach ($movies as $movie): ?>
@@ -53,6 +62,7 @@ foreach ($userBookings as $booking) {
                     <h3><?php echo $movie['title']; ?></h3>
                     <p><?php echo $movie['genre']; ?> | <?php echo $movie['duration']; ?> mins</p>
                     <p><?php echo $movie['description']; ?></p>
+                    <a href="<?= htmlspecialchars($movie['trailer_url']) ?>" target="_blank" class="trailer-button">Watch Trailer</a>
                     <?php if (isset($bookingMap[$movie['id']])): ?>
                         <div class="booked-status">
                             <p><strong>Booked Showtimes:</strong></p>
@@ -67,11 +77,20 @@ foreach ($userBookings as $booking) {
             <?php endforeach; ?>
         </ul>
     </div>
+    
+    <?php if ($isAdmin): ?>
+        <div class="admin-controls">
+            <h2>Admin Controls</h2>
+            <a href="add_movie.php" class="admin-button">Add Movie</a>
+            <!-- Add more admin functionalities here (e.g., Edit, Delete) -->
+        </div>
+    <?php endif; ?>
+    
     <br>
     <div class="logout-container">
         <a href="movies.php?logout=true" class="logout-button">Logout</a>
     </div>
-    
+
     <div class="theme-toggle-container">
         <button id="theme-toggle" class="theme-toggle-button">Switch to Dark Mode</button>
     </div>
@@ -101,7 +120,7 @@ foreach ($userBookings as $booking) {
             localStorage.setItem('theme', 'light'); // Save preference
         }
     });
-</script>
+    </script>
 
 </body>
 </html>

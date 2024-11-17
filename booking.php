@@ -92,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['showtime_id'], $_POST[
             </div>
 
             <button type="submit">Confirm Booking</button>
+            <a href="movies.php" class="back-to-movies-button">Back to Movies</a>
         </form>
 
         <?php if ($error): ?>
