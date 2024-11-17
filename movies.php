@@ -3,6 +3,7 @@
 session_start();
 require 'db_config.php';
 
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
@@ -17,6 +18,12 @@ $user = $userStmt->fetch(PDO::FETCH_ASSOC);
 
 // Check if user is admin
 $isAdmin = $user['role'] === 'admin';
+
+// If the user is an admin, redirect to the add_movie.php page
+if ($isAdmin) {
+    header("Location: add_movie.php");
+    exit();
+}
 
 // Handle logout
 if (isset($_GET['logout'])) {
@@ -77,14 +84,6 @@ foreach ($userBookings as $booking) {
             <?php endforeach; ?>
         </ul>
     </div>
-    
-    <?php if ($isAdmin): ?>
-        <div class="admin-controls">
-            <h2>Admin Controls</h2>
-            <a href="add_movie.php" class="admin-button">Add Movie</a>
-            <!-- Add more admin functionalities here (e.g., Edit, Delete) -->
-        </div>
-    <?php endif; ?>
     
     <br>
     <div class="logout-container">
