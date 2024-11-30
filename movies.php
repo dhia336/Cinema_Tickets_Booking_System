@@ -1,42 +1,40 @@
 <?php
-// movies.php
 session_start();
 require 'db_config.php';
 
-// Check if user is logged in
+// chouf ken l user loged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
 
-// Fetch user info and check if admin
+// admin walle w info
 $user_id = $_SESSION['user_id'];
 $userStmt = $conn->prepare("SELECT role FROM Users WHERE id = :user_id");
 $userStmt->bindParam(':user_id', $user_id);
 $userStmt->execute();
 $user = $userStmt->fetch(PDO::FETCH_ASSOC);
 
-// Check if user is admin
 $isAdmin = $user['role'] === 'admin';
 
-// If the user is an admin, redirect to the add_movie.php page
+// ken admin hezo lel add movie
 if ($isAdmin) {
     header("Location: add_movie.php");
     exit();
 }
 
-// Handle logout
+// deconnexion
 if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: index.php");
     exit();
 }
 
-// Fetch movies
+// jib  l movies
 $moviesStmt = $conn->query("SELECT * FROM Movies");
 $movies = $moviesStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch user bookings
+// jib user bookings
 $bookingsStmt = $conn->prepare("SELECT b.showtime_id, b.seats, s.movie_id, s.show_date, s.show_time 
                                 FROM Bookings b 
                                 JOIN Showtimes s ON b.showtime_id = s.id 

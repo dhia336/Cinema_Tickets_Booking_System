@@ -1,6 +1,5 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE); // This will suppress only notices, not warnings or errors
-// booking.php
 session_start();
 require 'db_config.php';
 
@@ -46,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['showtime_id'], $_POST[
         $stmt = $conn->prepare("INSERT INTO Bookings (user_id, showtime_id, seats, booking_time, payment_status) VALUES (:user_id, :showtime_id, :seats, NOW(), 'paid')");
         $stmt->bindParam(':user_id', $user_id);
         $stmt->bindParam(':showtime_id', $showtime_id);
-        $stmt->bindParam(':seats', json_encode($seats));  // Bind the JSON-encoded seats properly
+        $stmt->bindParam(':seats', json_encode($seats));
         
         if ($stmt->execute()) {
             $success = "Booking successful!";
