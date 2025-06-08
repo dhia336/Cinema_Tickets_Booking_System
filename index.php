@@ -1,12 +1,3 @@
-/**
- * Login Page
- * 
- * This file handles user authentication and login functionality.
- * It provides a login form and processes user credentials against the database.
- * 
- * @author Cinema Al Rahma
- * @version 1.0
- */
 
 <?php
 // Start session and include database configuration

@@ -1,12 +1,3 @@
-/**
- * Database Configuration File
- * 
- * This file contains the database connection settings and establishes
- * a PDO connection to the MySQL database.
- * 
- * @author Cinema Al Rahma
- * @version 1.0
- */
 
 <?php
 // Database connection parameters

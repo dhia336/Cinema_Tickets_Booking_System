@@ -1,12 +1,3 @@
-/**
- * Movies Page
- * 
- * This file displays available movies and handles user authentication.
- * It shows movie details, booking status, and provides navigation options.
- * 
- * @author Cinema Al Rahma
- * @version 1.0
- */
 
 <?php
 // Start session and include database configuration
