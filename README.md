@@ -22,9 +22,7 @@ A web-based cinema ticket booking system that allows users to browse movies, boo
 ## Installation
 
 1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/Cinema_Tickets_Booking_System.git
-```
+
 
 2. Set up the database:
    - Create a new MySQL database named `cinema_ticket_booking`
@@ -86,7 +84,7 @@ Cinema_Tickets_Booking_System/
 The system includes both light and dark themes:
 - Toggle between themes using the theme switch button
 - Theme preference is saved in local storage
-- Responsive design for all screen sizes
+- Responsive design for all screen sizes ( works perfectly on mobile devices )
 
 ## Contributing
 
@@ -102,9 +100,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Support
 
-For support, please open an issue in the GitHub repository or contact the development team.
-
-## Acknowledgments
-
-- FPDF library for PDF generation
-- All contributors who have helped shape this project 
+For support, please open an issue in the GitHub repository or contact me
